@@ -14,7 +14,9 @@
 //   bareLit            bare integer literals in non-tail returns
 //
 // Extend this contract as your project adopts more language features: one
-// function per feature, one test per function.
+// function per feature, one test per function. The canary is optional: once
+// your toolchain is stable, remove it together with test/Probe.t.sol and
+// build/Probe.* (see "The canary" in README.md).
 import std.{*};
 import std.dispatch.{*};
 

@@ -38,12 +38,19 @@ mkdir -p "$BUILD"
 
 files=("$@")
 if [ ${#files[@]} -eq 0 ]; then
-    # Probe first: it is the toolchain canary, so drift fails on the small
-    # labeled contract before your real contracts do.
-    files=("$SRC/Probe.solc")
+    # Probe first, when present: it is the toolchain canary, so drift fails
+    # on the small labeled contract before your real contracts do. The
+    # canary is optional - see "The canary" in README.md for removing it.
+    files=()
+    [ -f "$SRC/Probe.solc" ] && files+=("$SRC/Probe.solc")
     for f in "$SRC"/*.solc; do
+        [ -f "$f" ] || continue
         [ "$f" = "$SRC/Probe.solc" ] || files+=("$f")
     done
+    if [ ${#files[@]} -eq 0 ]; then
+        echo "error: no .solc sources found in src/" >&2
+        exit 1
+    fi
 fi
 
 for f in "${files[@]}"; do

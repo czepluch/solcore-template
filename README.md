@@ -55,7 +55,7 @@ test) is the canary doing its job: see `test/Probe.t.sol` for what changed.
 | Path | What it is |
 | --- | --- |
 | `src/Counter.solc` | The example contract: forge's default Counter, in Core Solidity |
-| `src/Probe.solc` | Toolchain canary: one function per language feature relied on |
+| `src/Probe.solc` | Toolchain canary: one function per language feature relied on (optional) |
 | `test/CoreDeploy.sol` | Deploys `build/<Name>.hex` inside forge tests |
 | `test/CounterAbi.sol` | Hand-authored interface: the ABI source of truth |
 | `test/Counter.t.sol` | Example suite: typed calls, fuzzing, exact reverts |
@@ -90,6 +90,17 @@ Solidity's `Error(string)` encoding. `check-core.sh` compiles Probe first,
 so after a toolchain bump, drift fails small and labeled instead of
 somewhere deep inside your real contract. When you adopt a new language
 feature, add a canary function and a pinning test alongside it.
+
+The canary is optional scaffolding for a young language. It earns its keep
+while you track a moving compiler; once the toolchain stabilizes (or your
+project pins a rev and never moves), remove it:
+
+```sh
+git rm src/Probe.solc test/Probe.t.sol build/Probe.hex build/Probe.yul
+```
+
+Everything else keeps working: `check-core.sh` only compiles Probe first
+when the file exists, and no other file references it.
 
 ## The toolchain pin
 
