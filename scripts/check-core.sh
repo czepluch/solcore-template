@@ -36,6 +36,13 @@ if [ -z "${STD:-}" ] || [ ! -d "$STD" ]; then
     exit 1
 fi
 
+# --check-toolchain: exit here, after the tool and STD checks, without
+# compiling. Lets callers (the Makefile) ask "is a complete toolchain
+# available?" with the exact preconditions this script enforces.
+if [ "${1:-}" = "--check-toolchain" ]; then
+    exit 0
+fi
+
 SRC="$ROOT/src"
 BUILD="$ROOT/build"
 mkdir -p "$BUILD"

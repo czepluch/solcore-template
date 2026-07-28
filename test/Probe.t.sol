@@ -44,8 +44,7 @@ contract ProbeTest is Test {
     /// matching revert messages (tests, clients, indexers) must expect this
     /// shape, which is why it gets its own pin.
     function test_probe_requireMessage_revertsRawBytes() public {
-        (bool ok, bytes memory ret) =
-            p.call(abi.encodeWithSignature("demandPositive(uint256)", 5));
+        (bool ok, bytes memory ret) = p.call(abi.encodeWithSignature("demandPositive(uint256)", 5));
         assertTrue(ok, "happy path reverted");
         assertEq(abi.decode(ret, (uint256)), 5);
 
