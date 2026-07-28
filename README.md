@@ -28,27 +28,28 @@ full `https://` URL, or a `file:///abs/path` URL for a local copy; a bare
 local path does not work. Plain `git clone <repo> && cd <repo> && forge
 test` is the equivalent fallback.
 
-Stage 2: pin the toolchain and rebuild the bytecode yourself (requires
-[nix](https://nixos.org)).
+Stage 2: enter the pinned toolchain and rebuild the bytecode yourself
+(requires [nix](https://nixos.org); the first run builds the sol-core
+compiler from source).
 
 ```sh
-git clone https://github.com/argotorg/solcore ../solcore
-git -C ../solcore checkout <rev>      # the solcore_rev in build/TOOLCHAIN,
-                                      # or omit to try a newer toolchain
-scripts/pin-toolchain.sh ../solcore
-scripts/check-core.sh
+nix develop        # sol-core, yule, solc, jq, make, forge - all pinned
+make build         # scripts/check-core.sh + forge build
 forge test
-git diff build/*.hex build/*.yul      # byte-identical rebuild -> no diff
+git diff build/    # byte-identical rebuild -> no diff
 ```
 
-`pin-toolchain.sh` also expects a pinned `solc` at `toolchain/solc/bin/solc`
-(it prints the `nix-store --add-root` command to create one); alternatively
-point `check-core.sh` at any solc 0.8.x via the `SOLC` env var. For a
-byte-identical rebuild, use the solc version recorded in `build/TOOLCHAIN`.
+The pin is the solcore rev in flake.nix's input URL, resolved by the
+committed flake.lock; the std library ships inside that same input, so
+compiler and std can never skew apart. Without nix, point `check-core.sh`
+at your own binaries via the `SOL_CORE`, `YULE`, `SOLC`, and `STD` env
+vars - for a byte-identical rebuild, match the toolchain recorded in
+`build/TOOLCHAIN`.
 
-At the pinned rev, the rebuilt hex must be byte-identical to the committed
-hex - that is the point of the pin. At a newer rev, a diff (or a failing
-test) is the canary doing its job: see `test/Probe.t.sol` for what changed.
+The rebuilt artifacts must be byte-identical to the committed ones - that
+is the point of the pin. After a toolchain bump (edit the rev in flake.nix,
+then `nix develop` and `make build`), a diff or a failing test is the
+canary doing its job: see `test/Probe.t.sol` for what changed.
 
 ## Layout
 
@@ -56,29 +57,32 @@ test) is the canary doing its job: see `test/Probe.t.sol` for what changed.
 | --- | --- |
 | `src/Counter.solc` | The example contract: forge's default Counter, in Core Solidity |
 | `src/Probe.solc` | Toolchain canary: one function per language feature relied on (optional) |
-| `test/CoreDeploy.sol` | Deploys `build/<Name>.hex` inside forge tests |
+| `test/CoreDeploy.sol` | Deploys `build/<Name>.json` inside forge tests via `vm.getCode` |
 | `test/CounterAbi.sol` | Hand-authored interface: the ABI source of truth |
 | `test/Counter.t.sol` | Example suite: typed calls, fuzzing, exact reverts |
 | `test/Probe.t.sol` | Pins the exact runtime behavior of each canary |
-| `scripts/pin-toolchain.sh` | Builds and pins sol-core, yule, std from a solcore checkout |
+| `flake.nix` | The toolchain pin: solcore (compiler + std), solc, forge as one input set |
+| `Makefile` | `make build / test / fmt / clean`; test rebuilds artifacts when it can |
 | `scripts/check-core.sh` | Compiles `src/*.solc` to `build/`, stamps `build/TOOLCHAIN` |
 | `scripts/sync-abi.sh` | Renders each `test/<Name>Abi.sol` to `abi/<Name>.json` |
 | `scripts/scaffold.sh` | Renames the Counter example to your contract name |
-| `build/` | Pipeline output; the example's `.hex`, `.yul`, and stamp are committed |
-| `toolchain/` | Machine-local pinned toolchain (gitignored; created by the pin script) |
+| `build/` | Committed pipeline output: `<Name>.json` artifacts, `.yul`, `TOOLCHAIN` stamp |
 | `lib/forge-std` | Vendored forge-std, so a bare clone is self-contained |
 
 ## How the harness works
 
 `scripts/check-core.sh` compiles each contract: `sol-core` (.solc to .hull),
 `yule` (.hull to .yul), then `solc --strict-assembly` (.yul to hex
-initcode) into `build/`. `test/CoreDeploy.sol` reads that hex with
-`vm.readFile`, appends ABI-encoded constructor args, and deploys it with
-`create`. Tests then talk to the deployed address through a hand-authored
-interface, so they read like ordinary forge tests and every Foundry feature
-works. The interface, not the compiler, is the ABI source of truth: the
-compiler's `--abi` cannot see events, errors, or view/pure, so
-`test/<Name>Abi.sol` declares them and `scripts/sync-abi.sh` renders JSON.
+initcode), wrapped into a Foundry-shaped artifact `build/<Name>.json`.
+`test/CoreDeploy.sol` loads it with `vm.getCode`, appends ABI-encoded
+constructor args, and deploys it with `create`. Tests then talk to the
+deployed address through a hand-authored interface, so they read like
+ordinary forge tests and every Foundry feature works. The interface, not
+the compiler, is the ABI source of truth: the artifact bundles the
+compiler's own `--abi` emission so tooling like `cast interface
+build/<Name>.json` works, but that emission is partial (functions only,
+no events, errors, or view/pure), so `test/<Name>Abi.sol` declares the
+complete surface and `scripts/sync-abi.sh` renders it to `abi/<Name>.json`.
 
 ## The canary
 
@@ -86,7 +90,9 @@ A research compiler moves under you. `src/Probe.solc` holds one tiny
 function per language feature this project relies on, and `test/Probe.t.sol`
 pins each one's exact runtime behavior - down to the wire shape of
 `require(cond, "msg")`, which reverts with the RAW message bytes, not
-Solidity's `Error(string)` encoding. `check-core.sh` compiles Probe first,
+Solidity's `Error(string)` encoding, and the storage layout itself (fields
+occupy sequential slots from 0, pinned by reading the slots with
+`vm.load`). `check-core.sh` compiles Probe first,
 so after a toolchain bump, drift fails small and labeled instead of
 somewhere deep inside your real contract. When you adopt a new language
 feature, add a canary function and a pinning test alongside it.
@@ -96,7 +102,7 @@ while you track a moving compiler; once the toolchain stabilizes (or your
 project pins a rev and never moves), remove it:
 
 ```sh
-git rm src/Probe.solc test/Probe.t.sol build/Probe.hex build/Probe.yul
+git rm src/Probe.solc test/Probe.t.sol build/Probe.json build/Probe.yul
 ```
 
 Everything else keeps working: `check-core.sh` only compiles Probe first
@@ -106,14 +112,18 @@ when the file exists, and no other file references it.
 
 The compiler binaries and the std library must move together: a compiler at
 one rev running against std sources from another fails in confusing ways or,
-worse, works by accident. `pin-toolchain.sh` therefore builds `sol-core` and
-`yule` from a single solcore rev, snapshots `std/` at that same rev, and
-records the rev; everything lands in `toolchain/` as nix GC-rooted links.
+worse, works by accident. `flake.nix` therefore takes solcore as a single
+input - the `sol-core` and `yule` binaries are built from it, the std
+library is read from it - with the rev pinned right in the input URL, and
+the committed `flake.lock` resolves `solc` and `forge` through solcore's
+own pins, so the whole toolchain moves as one set or not at all.
 `check-core.sh` stamps every build with the rev, binary hashes, and solc
 version in `build/TOOLCHAIN`. The committed stamp records exactly what
-produced the committed hex; the reproducibility criterion is the hex itself,
-byte for byte (binary hashes can differ across platforms, the bytecode must
-not).
+produced the committed artifacts; the reproducibility criterion is the
+bytecode itself, byte for byte (binary hashes can differ across platforms,
+the bytecode must not). To bump the toolchain: edit the rev in `flake.nix`,
+re-enter `nix develop`, run `make build`, and let the canary tell you what
+moved.
 
 ## Starting your own project
 
