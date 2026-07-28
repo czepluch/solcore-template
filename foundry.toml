@@ -1,0 +1,11 @@
+# Foundry here is a TEST HARNESS only: the contracts themselves are Core
+# Solidity (src/*.solc, compiled to build/*.hex by scripts/check-core.sh).
+# Forge ignores the .solc files in src/ (it only compiles *.sol); the tests
+# under test/ read the compiled hex, deploy it, and drive it through
+# hand-authored Solidity interfaces.
+[profile.default]
+src = "src"
+out = "out"
+libs = ["lib"]
+solc = "0.8.33"
+fs_permissions = [{ access = "read", path = "./build" }]
