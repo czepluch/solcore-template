@@ -6,12 +6,14 @@ import {Vm} from "forge-std/Vm.sol";
 /// @notice Deploys bytecode produced by the Core Solidity pipeline
 ///         (scripts/check-core.sh) inside forge tests. Constructor args are
 ///         ABI-appended to the initcode, exactly as Solidity does.
+/// @dev vm.getCode reads the bytecode.object field (creation code) of the
+///      Foundry-shaped artifact build/<name>.json; requires fs_permissions
+///      read access to ./build in foundry.toml.
 library CoreDeploy {
     Vm internal constant vm = Vm(address(uint160(uint256(keccak256("hevm cheat code")))));
 
     function initcode(string memory name) internal view returns (bytes memory) {
-        string memory hexStr = vm.readFile(string.concat("build/", name, ".hex"));
-        return vm.parseBytes(string.concat("0x", hexStr));
+        return vm.getCode(string.concat("build/", name, ".json"));
     }
 
     function deploy(string memory name, bytes memory ctorArgs) internal returns (address addr) {

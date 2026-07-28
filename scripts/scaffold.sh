@@ -65,7 +65,7 @@ rename "$ROOT/src/Counter.solc"      "$ROOT/src/$NAME.solc"       -e "s/Counter/
 rename "$ROOT/test/CounterAbi.sol"   "$ROOT/test/${NAME}Abi.sol"  -e "s/Counter/$NAME/g"
 rename "$ROOT/test/Counter.t.sol"    "$ROOT/test/$NAME.t.sol"     -e "s/Counter/$NAME/g" -e "s/counter/$lower/g"
 rename "$ROOT/build/Counter.yul"     "$ROOT/build/$NAME.yul"      -e "s/Counter/$NAME/g"
-rename "$ROOT/build/Counter.hex"     "$ROOT/build/$NAME.hex"
+rename "$ROOT/build/Counter.json"    "$ROOT/build/$NAME.json"
 rename "$ROOT/abi/Counter.json"      "$ROOT/abi/$NAME.json"
 
 echo "== done. Next:"

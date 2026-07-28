@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
-# Compile Core Solidity sources in src/ to deployable bytecode in build/.
+# Compile Core Solidity sources in src/ to Foundry-shaped artifacts in
+# build/: <Name>.json ({abi, bytecode.object}) plus the <Name>.yul
+# intermediate for inspection. Tests load the artifact with
+# vm.getCode("build/<Name>.json"); cast interface build/<Name>.json works.
 #
 # Pipeline per contract: sol-core (.solc -> .hull) -> yule (.hull -> .yul)
 #                        -> solc --strict-assembly (.yul -> hex initcode)
@@ -27,6 +30,10 @@ for tool in "$SOL_CORE" "$YULE" "$SOLC"; do
         exit 1
     fi
 done
+if ! command -v jq >/dev/null 2>&1; then
+    echo "error: jq not found (needed to assemble the artifact JSON)" >&2
+    exit 1
+fi
 if [ ! -d "$STD" ]; then
     echo "error: std library not found at $STD (run scripts/pin-toolchain.sh)" >&2
     exit 1
@@ -68,13 +75,7 @@ for f in "${files[@]}"; do
     echo "== $base"
     work="$WORK_ROOT/$base"
     mkdir -p "$work"
-    # No --abi: the compiler's ABI emitter covers functions/constructor/
-    # fallback only - events, errors, and view/pure are invisible to it - so
-    # the hand-authored interfaces under test/ are the ABI source of truth
-    # (scripts/sync-abi.sh turns them into JSON). Selector compatibility is
-    # proven by the forge suite, which drives the compiled bytecode through
-    # those interfaces.
-    "$SOL_CORE" -f "$f" --root "$SRC" -i "$STD" -o "$work"
+    "$SOL_CORE" -f "$f" --root "$SRC" -i "$STD" -o "$work" --abi
     # sol-core names its Core-IR output output<N>.hull, indexed per contract
     # in the file, so a second contract would land in output2.hull. Keep one
     # contract per file; fail loudly instead of silently dropping it.
@@ -88,9 +89,23 @@ for f in "${files[@]}"; do
     fi
     "$YULE" "$work/output1.hull" -o "$BUILD/$base.yul"
     # Extraction idiom from the solcore harness (contest.sh).
-    "$SOLC" --strict-assembly --bin --optimize "$BUILD/$base.yul" \
-        | tail -1 | tr -d '\n' > "$BUILD/$base.hex"
-    echo "   -> $BUILD/$base.hex ($(wc -c < "$BUILD/$base.hex") hex chars)"
+    creation="0x$("$SOLC" --strict-assembly --bin --optimize "$BUILD/$base.yul" \
+        | tail -1 | tr -d '\n')"
+    # The bundled ABI is the compiler's own emission and is PARTIAL: it
+    # covers functions/constructor/fallback and marks everything nonpayable;
+    # events, errors, and view/pure are invisible to it. It is included
+    # because it is purely pipeline-derived (so artifact reproducibility
+    # stays a statement about the toolchain alone). The complete ABI is the
+    # hand-authored interface under test/, rendered to abi/<Name>.json by
+    # scripts/sync-abi.sh, and proven against this bytecode by the forge
+    # suite.
+    abi='[]'
+    if [ -f "$work/$base.abi" ]; then
+        abi="$(cat "$work/$base.abi")"
+    fi
+    jq -n --argjson abi "$abi" --arg creation "$creation" \
+        '{abi: $abi, bytecode: {object: $creation}}' > "$BUILD/$base.json"
+    echo "   -> $BUILD/$base.json ($(( (${#creation} - 2) )) hex chars of initcode)"
 done
 
 # Stamp the exact toolchain that produced these artifacts. No timestamps, so
