@@ -53,6 +53,11 @@ if [ ${#files[@]} -eq 0 ]; then
     fi
 fi
 
+# Intermediates (.hull) live in a per-run temp dir, so build/ only ever
+# holds the committed artifacts.
+WORK_ROOT="$(mktemp -d)"
+trap 'rm -rf "$WORK_ROOT"' EXIT
+
 for f in "${files[@]}"; do
     base="$(basename "$f" .solc)"
     # Shared modules (no contract declaration) are compiled via their importers.
@@ -61,18 +66,27 @@ for f in "${files[@]}"; do
         continue
     fi
     echo "== $base"
-    # sol-core always names its output output1.hull (output2... for further
-    # contracts in the same file); we compile one contract per file and rename.
-    rm -f "$BUILD"/output*.hull
+    work="$WORK_ROOT/$base"
+    mkdir -p "$work"
     # No --abi: the compiler's ABI emitter covers functions/constructor/
     # fallback only - events, errors, and view/pure are invisible to it - so
     # the hand-authored interfaces under test/ are the ABI source of truth
     # (scripts/sync-abi.sh turns them into JSON). Selector compatibility is
     # proven by the forge suite, which drives the compiled bytecode through
     # those interfaces.
-    "$SOL_CORE" -f "$f" --root "$SRC" -i "$STD" -o "$BUILD"
-    mv "$BUILD/output1.hull" "$BUILD/$base.hull"
-    "$YULE" "$BUILD/$base.hull" -o "$BUILD/$base.yul"
+    "$SOL_CORE" -f "$f" --root "$SRC" -i "$STD" -o "$work"
+    # sol-core names its Core-IR output output<N>.hull, indexed per contract
+    # in the file, so a second contract would land in output2.hull. Keep one
+    # contract per file; fail loudly instead of silently dropping it.
+    if [ ! -f "$work/output1.hull" ]; then
+        echo "error: $base.solc produced no contract output" >&2
+        exit 1
+    fi
+    if [ -f "$work/output2.hull" ]; then
+        echo "error: $base.solc defines more than one contract; keep one contract per file" >&2
+        exit 1
+    fi
+    "$YULE" "$work/output1.hull" -o "$BUILD/$base.yul"
     # Extraction idiom from the solcore harness (contest.sh).
     "$SOLC" --strict-assembly --bin --optimize "$BUILD/$base.yul" \
         | tail -1 | tr -d '\n' > "$BUILD/$base.hex"
