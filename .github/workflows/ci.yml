@@ -1,0 +1,29 @@
+# Fast harness CI: no nix, no Core Solidity toolchain. Tests run against
+# the committed build/ artifacts, exactly like a fresh clone's stage-1
+# experience. Rebuilding the artifacts and proving byte-identity (the
+# reproduce job from the README's stage 2) is a local responsibility for
+# now; add a nix job with a store cache keyed on flake.lock if this repo
+# starts taking outside PRs or bumps the toolchain often.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  forge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run the Foundry suite against the committed artifacts
+        run: forge test -vvv
+
+      - name: Check harness formatting (forge fmt sees only .sol, never .solc)
+        run: forge fmt --check
+
+      - name: Check abi/ has not drifted from the hand-authored interfaces
+        run: scripts/sync-abi.sh --check
