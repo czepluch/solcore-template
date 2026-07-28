@@ -18,7 +18,7 @@ Stage 1: a working project in one command. No Core Solidity toolchain
 needed - the example's compiled bytecode is committed.
 
 ```sh
-forge init my-project --template <owner>/solcore-template
+forge init my-project --template czepluch/solcore-template
 cd my-project
 forge test
 ```
