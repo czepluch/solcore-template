@@ -125,16 +125,21 @@ the bytecode must not). To bump the toolchain: edit the rev in `flake.nix`,
 re-enter `nix develop`, run `make build`, and let the canary tell you what
 moved.
 
-## Starting your own project
+## Renaming the example
+
+`forge init` (or a clone) gives you a working project whose example
+contract is still named Counter. Make it yours:
 
 ```sh
 scripts/scaffold.sh MyContract
 forge test
 ```
 
-The rename keeps the committed build artifacts byte-exact (the compiled hex
-is name-independent), so tests stay green before any toolchain setup. Keep
-`src/Probe.solc` as your canary and grow it with your project.
+This renames the example in place: source, tests, interface, ABI, and the
+committed build artifacts, which stay byte-exact because the compiled
+bytecode is name-independent - so tests are green again before any
+toolchain setup. Keep `src/Probe.solc` as your canary and grow it with
+your project.
 
 ## License
 
