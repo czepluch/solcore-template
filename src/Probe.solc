@@ -7,6 +7,9 @@
 // Canaries (each maps to a Counter.solc pattern):
 //   constructor + get  constructor args ABI-appended to initcode, storage,
 //                      and selector dispatch, end-to-end
+//   stored/extra       storage fields lay out sequentially from slot 0, in
+//                      declaration order; test/Probe.t.sol pins the slots
+//                      with vm.load (what a delegatecall proxy would rely on)
 //   demandPositive     require(cond, "message"): the native revert payload
 //                      is the RAW message bytes, not Solidity's
 //                      Error(string) encoding; test/Probe.t.sol pins that
@@ -22,13 +25,19 @@ import std.dispatch.{*};
 
 contract Probe {
     stored : uint256;
+    extra : uint256;
 
     constructor(x : uint256) {
         stored = x;
+        extra = x + 1;
     }
 
     public function get() -> uint256 {
         return stored;
+    }
+
+    public function getExtra() -> uint256 {
+        return extra;
     }
 
     // require with a runtime-materialized string literal. On failure the

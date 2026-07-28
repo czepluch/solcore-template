@@ -21,9 +21,22 @@ contract ProbeTest is Test {
         assertTrue(ok, "get() reverted");
         assertEq(abi.decode(ret, (uint256)), 42, "ctor arg lost");
 
+        (ok, ret) = p.call(abi.encodeWithSignature("getExtra()"));
+        assertTrue(ok, "getExtra() reverted");
+        assertEq(abi.decode(ret, (uint256)), 43, "second field lost");
+
         // Unknown selector must revert (default dispatch behavior).
         (ok,) = p.call(abi.encodeWithSignature("nope()"));
         assertFalse(ok, "unknown selector did not revert");
+    }
+
+    /// Storage layout: fields occupy sequential slots from 0 in declaration
+    /// order. Read the slots directly (not through the ABI) so the pin is on
+    /// the layout itself - the contract anything storage-critical, such as a
+    /// delegatecall proxy setup, silently relies on.
+    function test_probe_storageLayout_sequentialFromSlotZero() public view {
+        assertEq(uint256(vm.load(p, bytes32(uint256(0)))), 42, "stored must be at slot 0");
+        assertEq(uint256(vm.load(p, bytes32(uint256(1)))), 43, "extra must be at slot 1");
     }
 
     /// require(cond, "message"): the failure payload is the RAW UTF-8 bytes
