@@ -5,9 +5,9 @@ out/
 # build/ is fully committed (the example's compiled artifacts plus the
 # TOOLCHAIN stamp); check-core.sh keeps its intermediates in a temp dir.
 
-# Pinned toolchain (machine-local nix GC roots + std snapshot;
-# recreate with scripts/pin-toolchain.sh)
-toolchain/
+# Nix build out-links
+result
+result-*
 
 # Dotenv
 .env

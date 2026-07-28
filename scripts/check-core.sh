@@ -7,35 +7,32 @@
 # Pipeline per contract: sol-core (.solc -> .hull) -> yule (.hull -> .yul)
 #                        -> solc --strict-assembly (.yul -> hex initcode)
 #
-# The toolchain lives in toolchain/ (machine-local, gitignored): GC-rooted nix
-# links for sol-core/yule/solc plus a std snapshot, all at the single solcore
-# rev recorded in toolchain/SOLCORE_REV. It is (re)created by
-# scripts/pin-toolchain.sh, so binaries and std move together or not at all.
-# Every path is env-overridable (SOL_CORE, YULE, SOLC, STD; SOLCORE_REV for
-# the stamp). Each run stamps the exact toolchain into build/TOOLCHAIN.
+# The toolchain comes from the nix dev shell: flake.nix pins the solcore
+# rev, and `nix develop` puts sol-core, yule, solc, and jq on PATH and
+# exports STD (the std library path, from the SAME rev as the binaries)
+# plus SOLCORE_REV (for the build stamp). Everything is env-overridable
+# (SOL_CORE, YULE, SOLC, STD; SOLCORE_REV for the stamp), so any toolchain
+# can be substituted. Each run stamps the exact toolchain into
+# build/TOOLCHAIN.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-TOOLCHAIN="$ROOT/toolchain"
 
-SOL_CORE="${SOL_CORE:-$TOOLCHAIN/sol-core/bin/sol-core}"
-YULE="${YULE:-$TOOLCHAIN/sol-core/bin/yule}"
-SOLC="${SOLC:-$TOOLCHAIN/solc/bin/solc}"
-STD="${STD:-$TOOLCHAIN/std}"
+SOL_CORE="${SOL_CORE:-sol-core}"
+YULE="${YULE:-yule}"
+SOLC="${SOLC:-solc}"
 
-for tool in "$SOL_CORE" "$YULE" "$SOLC"; do
-    if [ ! -x "$tool" ]; then
-        echo "error: $tool not found or not executable" >&2
-        echo "       run scripts/pin-toolchain.sh first (see its header)" >&2
+for tool in "$SOL_CORE" "$YULE" "$SOLC" jq; do
+    if ! command -v "$tool" >/dev/null 2>&1; then
+        echo "error: '$tool' not found on PATH" >&2
+        echo "       enter the dev shell first: nix develop" >&2
         exit 1
     fi
 done
-if ! command -v jq >/dev/null 2>&1; then
-    echo "error: jq not found (needed to assemble the artifact JSON)" >&2
-    exit 1
-fi
-if [ ! -d "$STD" ]; then
-    echo "error: std library not found at $STD (run scripts/pin-toolchain.sh)" >&2
+if [ -z "${STD:-}" ] || [ ! -d "$STD" ]; then
+    echo "error: STD (Core Solidity std library path) is unset or not a directory" >&2
+    echo "       enter the dev shell (nix develop), which exports it, or point" >&2
+    echo "       STD at the std/ directory of a solcore checkout" >&2
     exit 1
 fi
 
@@ -109,14 +106,14 @@ for f in "${files[@]}"; do
 done
 
 # Stamp the exact toolchain that produced these artifacts. No timestamps, so
-# reproducible rebuilds diff clean.
+# reproducible rebuilds diff clean. The rev comes from the dev shell
+# (SOLCORE_REV) or, outside it, from the committed flake.lock.
+rev="${SOLCORE_REV:-$(jq -r '.nodes.solcore.locked.rev // "unknown"' "$ROOT/flake.lock" 2>/dev/null || echo unknown)}"
 {
-    echo "solcore_rev ${SOLCORE_REV:-$(cat "$TOOLCHAIN/SOLCORE_REV" 2>/dev/null || echo unknown)}"
-    echo "sol_core_sha256 $(sha256sum "$SOL_CORE" | cut -d' ' -f1)"
-    echo "yule_sha256 $(sha256sum "$YULE" | cut -d' ' -f1)"
+    echo "solcore_rev $rev"
+    echo "sol_core_sha256 $(sha256sum "$(command -v "$SOL_CORE")" | cut -d' ' -f1)"
+    echo "yule_sha256 $(sha256sum "$(command -v "$YULE")" | cut -d' ' -f1)"
     echo "solc $("$SOLC" --version | tail -1)"
-    if [ "$STD" != "$TOOLCHAIN/std" ]; then
-        echo "std_override $STD"
-    fi
+    echo "std $STD"
 } > "$BUILD/TOOLCHAIN"
 echo "== stamped $BUILD/TOOLCHAIN"
