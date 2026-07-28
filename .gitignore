@@ -1,0 +1,18 @@
+# Foundry
+cache/
+out/
+
+# Core Solidity pipeline: keep the committed artifacts (the example's .hex
+# and .yul so forge test works on a fresh clone, plus the TOOLCHAIN stamp
+# that records what produced them); ignore the intermediates.
+build/*
+!build/*.hex
+!build/*.yul
+!build/TOOLCHAIN
+
+# Pinned toolchain (machine-local nix GC roots + std snapshot;
+# recreate with scripts/pin-toolchain.sh)
+toolchain/
+
+# Dotenv
+.env

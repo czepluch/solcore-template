@@ -1,0 +1,45 @@
+// Toolchain probe: one tiny function per language feature this project
+// relies on, each pinned by a forge test asserting exact runtime behavior.
+// check-core.sh compiles this file FIRST, so when the pinned toolchain moves
+// (rev bump, std change), drift fails here - small and labeled - before your
+// real contracts do.
+//
+// Canaries (each maps to a Counter.solc pattern):
+//   constructor + get  constructor args ABI-appended to initcode, storage,
+//                      and selector dispatch, end-to-end
+//   demandPositive     require(cond, "message"): the native revert payload
+//                      is the RAW message bytes, not Solidity's
+//                      Error(string) encoding; test/Probe.t.sol pins that
+//                      wire shape
+//   bareLit            bare integer literals in non-tail returns
+//
+// Extend this contract as your project adopts more language features: one
+// function per feature, one test per function.
+import std.{*};
+import std.dispatch.{*};
+
+contract Probe {
+    stored : uint256;
+
+    constructor(x : uint256) {
+        stored = x;
+    }
+
+    public function get() -> uint256 {
+        return stored;
+    }
+
+    // require with a runtime-materialized string literal. On failure the
+    // revert payload is the raw UTF-8 bytes of the message - deliberately
+    // NOT the Solidity Error(string) ABI encoding.
+    public function demandPositive(x : uint256) -> uint256 {
+        require(x > 0, "Probe: x must be positive");
+        return x;
+    }
+
+    // Bare literals in non-tail returns, unified against the expected type.
+    public function bareLit(x : uint256) -> uint256 {
+        if (x > 0) { return 0; }
+        return 1;
+    }
+}

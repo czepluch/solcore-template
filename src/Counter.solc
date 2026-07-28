@@ -1,0 +1,38 @@
+// The example contract: a Core Solidity port of forge's default Counter.
+// Same external surface (number(), setNumber(uint256), increment()) plus a
+// decrement() carrying the one require(cond, "message") the Probe canary
+// pins the wire shape of.
+//
+// Replace this contract with your own; keep src/Probe.solc as the toolchain
+// canary.
+import std.{*};
+import std.dispatch.{*};
+
+contract Counter {
+    number : uint256;
+
+    // A storage field and a public function may share a name; the function
+    // is the ABI accessor (there are no auto-generated getters).
+    public function number() -> uint256 {
+        return number;
+    }
+
+    public function setNumber(newNumber : uint256) -> () {
+        number = newNumber;
+    }
+
+    public function increment() -> () {
+        number = number + 1;
+    }
+
+    // require with a source-literal message: on failure the revert payload
+    // is the RAW message bytes, not Solidity's Error(string) encoding.
+    // test/Probe.t.sol pins that wire shape; test/Counter.t.sol relies on it.
+    // The message deliberately does not embed the contract name: the compiled
+    // hex is name-independent, so scripts/scaffold.sh can rename this
+    // contract without invalidating the committed build artifacts.
+    public function decrement() -> () {
+        require(number > 0, "underflow");
+        number = number - 1;
+    }
+}
