@@ -39,6 +39,22 @@ Without nix, set `SOL_CORE`, `YULE`, `SOLC`, and `STD` to your own binaries
 and std library. `build/TOOLCHAIN` records what produced the committed
 artifacts; match it for byte-identical output.
 
+## Development
+
+Work on `.solc` sources inside the dev shell; `make test` recompiles them
+before running the suite:
+
+```sh
+nix develop
+# edit src/*.solc, then:
+make test
+```
+
+Plain `forge test` does not compile `.solc` files - it tests whatever is in
+`build/`. Commit the regenerated `build/` artifacts together with the
+source change; the committed artifacts are what let people without a
+toolchain run the tests.
+
 ## Layout
 
 | Path | What it is |
