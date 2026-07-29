@@ -9,7 +9,7 @@
     # the rev here (or drop the /<rev> suffix and run `nix flake update
     # solcore`), rebuild with scripts/check-core.sh, and let the canary
     # tests tell you what moved.
-    solcore.url = "github:argotorg/solcore/8a77bd3ff3a15ec58558ac2b0d3b9ac37a833e35";
+    solcore.url = "github:argotorg/solcore/ca20a51fe28d2d3fe6046ad77e1877f3fcec38bc";
 
     # Reuse solcore's pinned nixpkgs and foundry overlay so the whole
     # toolchain (compiler, solc assembler, forge) moves as one set.

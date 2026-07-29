@@ -5,13 +5,13 @@ object "CounterDeploy" {
       if lt(codesize(), datasize("CounterDeploy")) {revert(0, 0)}
       if callvalue() {mstore(0, 3046674083)
                       revert(28, 4)}
-      usr$invokable_invoke$t_init_134553()
+      usr$invokable_invoke$t_init_138170()
       let size := datasize("Counter")
       codecopy(0, dataoffset("Counter"), datasize("Counter"))
       return(0, size)
     }
     function usr$init_ () { }
-    function usr$invokable_invoke$t_init_134553 () {
+    function usr$invokable_invoke$t_init_138170 () {
       usr$init_()
       leave
     }
@@ -95,26 +95,26 @@ object "CounterDeploy" {
         _v13 := _v14
         leave
       }
-      function usr$ExecMethod_exec$FallbackLpayability_unit_unit_fnJ$NonPayable_t_fallback_default_implementation71936 () {
+      function usr$ExecMethod_exec$FallbackLpayability_unit_unit_fnJ$NonPayable_t_fallback_default_implementation74113 () {
         usr$MethodLevelCallvalueCheck_checkCallvalue$NonPayable()
-        usr$invokable_invoke$t_fallback_default_implementation71936()
+        usr$invokable_invoke$t_fallback_default_implementation74113()
         stop()
       }
-      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_decrement_unit_unit_t_decrement127383 () {
+      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_decrement_unit_unit_t_decrement130840 () {
         usr$MethodLevelCallvalueCheck_checkCallvalue$NonPayable()
-        usr$do_exec$unit_unit_t_decrement127383()
+        usr$do_exec$unit_unit_t_decrement130840()
       }
-      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_increment_unit_unit_t_increment123612 () {
+      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_increment_unit_unit_t_increment126989 () {
         usr$MethodLevelCallvalueCheck_checkCallvalue$NonPayable()
-        usr$do_exec$unit_unit_t_increment123612()
+        usr$do_exec$unit_unit_t_increment126989()
       }
-      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_number_unit_uint256_t_number119951 () {
+      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_number_unit_uint256_t_number123248 () {
         usr$MethodLevelCallvalueCheck_checkCallvalue$NonPayable()
-        usr$do_exec$unit_uint256_t_number119951()
+        usr$do_exec$unit_uint256_t_number123248()
       }
-      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_setNumber_uint256_unit_t_setNumber116413 () {
+      function usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_setNumber_uint256_unit_t_setNumber119630 () {
         usr$MethodLevelCallvalueCheck_checkCallvalue$NonPayable()
-        usr$do_exec$uint256_unit_t_setNumber116413()
+        usr$do_exec$uint256_unit_t_setNumber119630()
       }
       function usr$HasWordReader_getWordReader$calldataLbytesJ (x) -> _result {
         let _v15
@@ -158,7 +158,7 @@ object "CounterDeploy" {
         _result := _v27
         leave
       }
-      function usr$RunContract_exec$ContractLmethods_fbJ$pairLMethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number119951J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383JJJJ_FallbackLNonPayable_unit_unit_t_fallback_default_implementation71936J () {
+      function usr$RunContract_exec$ContractLmethods_fbJ$pairLMethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number123248J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840JJJJ_FallbackLNonPayable_unit_unit_t_fallback_default_implementation74113J () {
         mstore(64, memoryguard(128))
         let _v28
         let _v29
@@ -168,44 +168,44 @@ object "CounterDeploy" {
         _v28 := _v30
         switch _v28
           case false {}
-          case true {usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number119951J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383JJJ()}
-        usr$ExecMethod_exec$FallbackLpayability_unit_unit_fnJ$NonPayable_t_fallback_default_implementation71936()
+          case true {usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number123248J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840JJJ()}
+        usr$ExecMethod_exec$FallbackLpayability_unit_unit_fnJ$NonPayable_t_fallback_default_implementation74113()
       }
-      function usr$RunDispatch_go$MethodLname_payability_args_rets_fnJ$DispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383 () {
+      function usr$RunDispatch_go$MethodLname_payability_args_rets_fnJ$DispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840 () {
         let _v31
         let _v32
-        _v32 := usr$selector_matches$MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383J()
+        _v32 := usr$selector_matches$MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840J()
         _v31 := _v32
         switch _v31
           case false {leave}
-          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_decrement_unit_unit_t_decrement127383()}
+          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_decrement_unit_unit_t_decrement130840()}
       }
-      function usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383J () {
+      function usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840J () {
         let _v33
         let _v34
-        _v34 := usr$selector_matches$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J()
+        _v34 := usr$selector_matches$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J()
         _v33 := _v34
         switch _v33
-          case false {usr$RunDispatch_go$MethodLname_payability_args_rets_fnJ$DispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383()}
-          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_increment_unit_unit_t_increment123612()}
+          case false {usr$RunDispatch_go$MethodLname_payability_args_rets_fnJ$DispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840()}
+          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_increment_unit_unit_t_increment126989()}
       }
-      function usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number119951J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383JJJ () {
+      function usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number123248J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840JJJ () {
         let _v35
         let _v36
-        _v36 := usr$selector_matches$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number119951J()
+        _v36 := usr$selector_matches$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number123248J()
         _v35 := _v36
         switch _v35
-          case false {usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383JJ()}
-          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_number_unit_uint256_t_number119951()}
+          case false {usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840JJ()}
+          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_number_unit_uint256_t_number123248()}
       }
-      function usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383JJ () {
+      function usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840JJ () {
         let _v37
         let _v38
-        _v38 := usr$selector_matches$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J()
+        _v38 := usr$selector_matches$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J()
         _v37 := _v38
         switch _v37
-          case false {usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383J()}
-          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_setNumber_uint256_unit_t_setNumber116413()}
+          case false {usr$RunDispatch_go$pairLn_mJ$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840J()}
+          case true {usr$ExecMethod_exec$MethodLname_NonPayable_args_rets_fnJ$DispatchNameTy_Counter_setNumber_uint256_unit_t_setNumber119630()}
       }
       function usr$StorageType_load$uint256 (ptr) -> _result {
         let _v39
@@ -381,7 +381,7 @@ object "CounterDeploy" {
         _v67 := usr$Sub_sub$uint256(_v66, 1)
         usr$Assign_assign$a$storageLuint256J_uint256(0, _v67)
       }
-      function usr$do_exec$uint256_unit_t_setNumber116413 () {
+      function usr$do_exec$uint256_unit_t_setNumber119630 () {
         let _v68
         _v68 := usr$calldatasize()
         let _v69
@@ -393,7 +393,7 @@ object "CounterDeploy" {
         let _v72
         _v72 := usr$abi_decode$calldataLbytesJ_uint256_CalldataWordReader_uint256(4)
         _v71 := _v72
-        usr$invokable_invoke$t_setNumber116413(_v71)
+        usr$invokable_invoke$t_setNumber119630(_v71)
         let _v73
         let _v74
         _v74 := usr$abi_encode$unit()
@@ -412,7 +412,7 @@ object "CounterDeploy" {
         retSz := _v77
         return(start, retSz)
       }
-      function usr$do_exec$unit_uint256_t_number119951 () {
+      function usr$do_exec$unit_uint256_t_number123248 () {
         let _v78
         _v78 := usr$calldatasize()
         let _v79
@@ -422,7 +422,7 @@ object "CounterDeploy" {
         _v80 := 4
         let _v81
         let _v82
-        _v82 := usr$invokable_invoke$t_number119951()
+        _v82 := usr$invokable_invoke$t_number123248()
         _v81 := _v82
         let _v83
         let _v84
@@ -442,7 +442,7 @@ object "CounterDeploy" {
         retSz := _v87
         return(start, retSz)
       }
-      function usr$do_exec$unit_unit_t_decrement127383 () {
+      function usr$do_exec$unit_unit_t_decrement130840 () {
         let _v88
         _v88 := usr$calldatasize()
         let _v89
@@ -450,7 +450,7 @@ object "CounterDeploy" {
         usr$require(_v89, false, 140739926, 911)
         let _v90
         _v90 := 4
-        usr$invokable_invoke$t_decrement127383()
+        usr$invokable_invoke$t_decrement130840()
         let _v91
         let _v92
         _v92 := usr$abi_encode$unit()
@@ -469,7 +469,7 @@ object "CounterDeploy" {
         retSz := _v95
         return(start, retSz)
       }
-      function usr$do_exec$unit_unit_t_increment123612 () {
+      function usr$do_exec$unit_unit_t_increment126989 () {
         let _v96
         _v96 := usr$calldatasize()
         let _v97
@@ -477,7 +477,7 @@ object "CounterDeploy" {
         usr$require(_v97, false, 140739926, 911)
         let _v98
         _v98 := 4
-        usr$invokable_invoke$t_increment123612()
+        usr$invokable_invoke$t_increment126989()
         let _v99
         let _v100
         _v100 := usr$abi_encode$unit()
@@ -551,27 +551,27 @@ object "CounterDeploy" {
         _v117 := usr$Add_add$uint256(_v116, 1)
         usr$Assign_assign$a$storageLuint256J_uint256(0, _v117)
       }
-      function usr$invokable_invoke$t_decrement127383 () {
+      function usr$invokable_invoke$t_decrement130840 () {
         usr$decrement()
         leave
       }
-      function usr$invokable_invoke$t_fallback_default_implementation71936 () {
+      function usr$invokable_invoke$t_fallback_default_implementation74113 () {
         usr$fallback_default_implementation()
         leave
       }
-      function usr$invokable_invoke$t_increment123612 () {
+      function usr$invokable_invoke$t_increment126989 () {
         usr$increment()
         leave
       }
-      function usr$invokable_invoke$t_number119951 () -> _result {
+      function usr$invokable_invoke$t_number123248 () -> _result {
         let _v118
         _v118 := usr$number()
         _result := _v118
         leave
       }
-      function usr$invokable_invoke$t_setNumber116413 (arg116415) {
+      function usr$invokable_invoke$t_setNumber119630 (arg119632) {
         let _v119
-        _v119 := arg116415
+        _v119 := arg119632
         usr$setNumber(_v119)
         leave
       }
@@ -584,7 +584,7 @@ object "CounterDeploy" {
         leave
       }
       function usr$main () -> _v123 {
-        usr$RunContract_exec$ContractLmethods_fbJ$pairLMethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number119951J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383JJJJ_FallbackLNonPayable_unit_unit_t_fallback_default_implementation71936J()
+        usr$RunContract_exec$ContractLmethods_fbJ$pairLMethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number123248J_pairLMethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J_pairLMethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J_MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840JJJJ_FallbackLNonPayable_unit_unit_t_fallback_default_implementation74113J()
       }
       function usr$mload (a) -> _result {
         let res
@@ -632,7 +632,7 @@ object "CounterDeploy" {
                                   usr$revert_(_v137, _v138)}}
       }
       function usr$revert_ (a, b) { revert(a, b) }
-      function usr$selector_matches$MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement127383J () -> _v139 {
+      function usr$selector_matches$MethodLDispatchNameTy_Counter_decrement_NonPayable_unit_unit_t_decrement130840J () -> _v139 {
         let candidate
         candidate := 732876471
         let selector
@@ -646,7 +646,7 @@ object "CounterDeploy" {
         _v139 := _v142
         leave
       }
-      function usr$selector_matches$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment123612J () -> _v143 {
+      function usr$selector_matches$MethodLDispatchNameTy_Counter_increment_NonPayable_unit_unit_t_increment126989J () -> _v143 {
         let candidate
         candidate := 3500007562
         let selector
@@ -660,7 +660,7 @@ object "CounterDeploy" {
         _v143 := _v146
         leave
       }
-      function usr$selector_matches$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number119951J () -> _v147 {
+      function usr$selector_matches$MethodLDispatchNameTy_Counter_number_NonPayable_unit_uint256_t_number123248J () -> _v147 {
         let candidate
         candidate := 2206332298
         let selector
@@ -674,7 +674,7 @@ object "CounterDeploy" {
         _v147 := _v150
         leave
       }
-      function usr$selector_matches$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber116413J () -> _v151 {
+      function usr$selector_matches$MethodLDispatchNameTy_Counter_setNumber_NonPayable_uint256_unit_t_setNumber119630J () -> _v151 {
         let candidate
         candidate := 1068876235
         let selector

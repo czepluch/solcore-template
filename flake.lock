@@ -113,17 +113,17 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1784907905,
-        "narHash": "sha256-oUKTjZP0KbBkCgEKnx0NMngJLyCgQT7egwPg+0FncAo=",
+        "lastModified": 1785326946,
+        "narHash": "sha256-nbnI4TBXQnSrYBR/Cggy02tNJSKXB6uFVSj9oNc/ZHY=",
         "owner": "argotorg",
         "repo": "solcore",
-        "rev": "8a77bd3ff3a15ec58558ac2b0d3b9ac37a833e35",
+        "rev": "ca20a51fe28d2d3fe6046ad77e1877f3fcec38bc",
         "type": "github"
       },
       "original": {
         "owner": "argotorg",
         "repo": "solcore",
-        "rev": "8a77bd3ff3a15ec58558ac2b0d3b9ac37a833e35",
+        "rev": "ca20a51fe28d2d3fe6046ad77e1877f3fcec38bc",
         "type": "github"
       }
     },

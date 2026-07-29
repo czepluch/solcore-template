@@ -1,5 +1,5 @@
-solcore_rev 8a77bd3ff3a15ec58558ac2b0d3b9ac37a833e35
-sol_core_sha256 5107fe1a90e1d5bef8be6cb52d80e8463e6a570bdb6b039efe63879f8a4c254c
+solcore_rev ca20a51fe28d2d3fe6046ad77e1877f3fcec38bc
+sol_core_sha256 a6322b2c291196119766490ce7fb45f8f61df7ec03df70086207e959619dd212
 yule_sha256 b52302d37b0722685a2f7190c767a30aac9facdb995630c8ba4845af0f901586
 solc Version: 0.8.28+commit.7893614a.Linux.g++
-std /nix/store/v9l9njz1b7cwgwhbddyshnq39a80ahjp-source/std
+std /nix/store/m6m8vz200s7zbxp0pj3viq822h78b4dn-source/std
