@@ -3,11 +3,12 @@
 A project template for [Core Solidity](https://github.com/argotorg/solcore)
 with a Foundry test harness.
 
-Core Solidity's `sol-core` compiler has no test tooling, but it emits
-standard EVM bytecode. The harness compiles `.solc` sources to bytecode
-artifacts, deploys them inside forge tests, and drives them through
-hand-written Solidity interfaces. Fuzzing, invariant testing, exact revert
-assertions, and gas reports work unchanged.
+Core Solidity does not yet have its own contract test framework, so this
+template uses Foundry in the meantime. The `sol-core` compiler emits
+standard EVM bytecode, which makes that straightforward: the harness
+compiles `.solc` sources to bytecode artifacts, deploys them inside forge
+tests, and drives them through hand-written Solidity interfaces. Fuzzing,
+invariant testing, exact revert assertions, and gas reports work unchanged.
 
 The example's compiled artifacts are committed, so a fresh clone passes
 `forge test` without any Core Solidity toolchain. The toolchain is only
