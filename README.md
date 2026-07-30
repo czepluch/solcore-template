@@ -55,6 +55,11 @@ Plain `forge test` does not compile `.solc` files - it tests whatever is in
 source change; the committed artifacts are what let people without a
 toolchain run the tests.
 
+Committing artifacts is a policy, not a requirement: add `build/` to
+`.gitignore` and it behaves like forge's `out/`. The trade-off is that a
+fresh clone then needs the toolchain before tests run, and `git diff
+build/` no longer verifies reproducibility.
+
 ## Layout
 
 | Path | What it is |
