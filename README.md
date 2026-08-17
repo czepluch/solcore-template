@@ -16,7 +16,7 @@ needed to rebuild the bytecode; it is pinned by a nix flake.
 ## Quickstart
 
 ```sh
-forge init my-project --template czepluch/solcore-template
+forge init my-project --template argotorg/solcore-template
 cd my-project
 forge test
 ```
