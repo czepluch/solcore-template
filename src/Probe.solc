@@ -20,36 +20,36 @@
 // function per feature, one test per function. The canary is optional: once
 // your toolchain is stable, remove it together with test/Probe.t.sol and
 // build/Probe.* (see "The canary" in README.md).
-import std.{*};
-import std.dispatch.{*};
+import * from std;
+import * from std.dispatch;
 
 contract Probe {
-    stored : uint256;
-    extra : uint256;
+    stored: uint256;
+    extra: uint256;
 
-    constructor(x : uint256) {
+    constructor(x: uint256) {
         stored = x;
         extra = x + 1;
     }
 
-    public function get() -> uint256 {
+    function get() public returns (uint256) {
         return stored;
     }
 
-    public function getExtra() -> uint256 {
+    function getExtra() public returns (uint256) {
         return extra;
     }
 
     // require with a runtime-materialized string literal. On failure the
     // revert payload is the raw UTF-8 bytes of the message - deliberately
     // NOT the Solidity Error(string) ABI encoding.
-    public function demandPositive(x : uint256) -> uint256 {
+    function demandPositive(x: uint256) public returns (uint256) {
         require(x > 0, "Probe: x must be positive");
         return x;
     }
 
     // Bare literals in non-tail returns, unified against the expected type.
-    public function bareLit(x : uint256) -> uint256 {
+    function bareLit(x: uint256) public returns (uint256) {
         if (x > 0) { return 0; }
         return 1;
     }

@@ -5,23 +5,23 @@
 //
 // Replace this contract with your own; keep src/Probe.solc as the toolchain
 // canary.
-import std.{*};
-import std.dispatch.{*};
+import * from std;
+import * from std.dispatch;
 
 contract Counter {
-    number : uint256;
+    number: uint256;
 
     // A storage field and a public function may share a name; the function
     // is the ABI accessor (there are no auto-generated getters).
-    public function number() -> uint256 {
+    function number() public returns (uint256) {
         return number;
     }
 
-    public function setNumber(newNumber : uint256) -> () {
+    function setNumber(newNumber: uint256) public {
         number = newNumber;
     }
 
-    public function increment() -> () {
+    function increment() public {
         number = number + 1;
     }
 
@@ -31,7 +31,7 @@ contract Counter {
     // The message deliberately does not embed the contract name: the compiled
     // hex is name-independent, so scripts/scaffold.sh can rename this
     // contract without invalidating the committed build artifacts.
-    public function decrement() -> () {
+    function decrement() public {
         require(number > 0, "underflow");
         number = number - 1;
     }
