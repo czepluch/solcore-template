@@ -7,7 +7,7 @@
 # name), so the renamed build/ artifacts remain byte-identical to what a
 # rebuild of the renamed source produces: forge test stays green before any
 # toolchain setup, and the reproducibility check keeps meaning something.
-# src/Probe.solc is the toolchain canary and is not touched.
+# src/Probe.sol is the toolchain canary and is not touched.
 #
 # Usage: scripts/scaffold.sh [<Name>]
 #        (UpperCamelCase; prompted for interactively if omitted)
@@ -33,12 +33,12 @@ if [ "$NAME" = "Probe" ]; then
     echo "error: Probe is the toolchain canary; pick another name" >&2
     exit 1
 fi
-if [ ! -f "$ROOT/src/Counter.solc" ]; then
-    echo "error: src/Counter.solc not found (already scaffolded?)" >&2
+if [ ! -f "$ROOT/src/Counter.sol" ]; then
+    echo "error: src/Counter.sol not found (already scaffolded?)" >&2
     exit 1
 fi
-if [ -e "$ROOT/src/$NAME.solc" ]; then
-    echo "error: src/$NAME.solc already exists" >&2
+if [ -e "$ROOT/src/$NAME.sol" ]; then
+    echo "error: src/$NAME.sol already exists" >&2
     exit 1
 fi
 
@@ -61,7 +61,7 @@ rename() {
 }
 
 echo "== renaming Counter to $NAME"
-rename "$ROOT/src/Counter.solc"      "$ROOT/src/$NAME.solc"       -e "s/Counter/$NAME/g"
+rename "$ROOT/src/Counter.sol"      "$ROOT/src/$NAME.sol"       -e "s/Counter/$NAME/g"
 rename "$ROOT/test/CounterAbi.sol"   "$ROOT/test/${NAME}Abi.sol"  -e "s/Counter/$NAME/g"
 rename "$ROOT/test/Counter.t.sol"    "$ROOT/test/$NAME.t.sol"     -e "s/Counter/$NAME/g" -e "s/counter/$lower/g"
 rename "$ROOT/build/Counter.yul"     "$ROOT/build/$NAME.yul"      -e "s/Counter/$NAME/g"

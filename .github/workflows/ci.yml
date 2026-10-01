@@ -22,7 +22,7 @@ jobs:
       - name: Run the Foundry suite against the committed artifacts
         run: forge test -vvv
 
-      - name: Check harness formatting (forge fmt sees only .sol, never .solc)
+      - name: Check harness formatting (fmt.ignore keeps Core sources out)
         run: forge fmt --check
 
       - name: Check abi/ has not drifted from the hand-authored interfaces

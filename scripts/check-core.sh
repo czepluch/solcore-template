@@ -4,8 +4,11 @@
 # intermediate for inspection. Tests load the artifact with
 # vm.getCode("build/<Name>.json"); cast interface build/<Name>.json works.
 #
-# Pipeline per contract: sol-core (.solc -> .hull) -> yule (.hull -> .yul)
+# Pipeline per contract: sol-core (Core .sol -> .hull) -> yule (.hull -> .yul)
 #                        -> solc --strict-assembly (.yul -> hex initcode)
+#
+# src/*.sol is Core Solidity, not solc Solidity: foundry.toml skips src/
+# entirely, so this script is the only thing that compiles it.
 #
 # The toolchain comes from the nix dev shell: flake.nix pins the solcore
 # rev, and `nix develop` puts sol-core, yule, solc, and jq on PATH and
@@ -53,13 +56,13 @@ if [ ${#files[@]} -eq 0 ]; then
     # on the small labeled contract before your real contracts do. The
     # canary is optional - see "The canary" in README.md for removing it.
     files=()
-    [ -f "$SRC/Probe.solc" ] && files+=("$SRC/Probe.solc")
-    for f in "$SRC"/*.solc; do
+    [ -f "$SRC/Probe.sol" ] && files+=("$SRC/Probe.sol")
+    for f in "$SRC"/*.sol; do
         [ -f "$f" ] || continue
-        [ "$f" = "$SRC/Probe.solc" ] || files+=("$f")
+        [ "$f" = "$SRC/Probe.sol" ] || files+=("$f")
     done
     if [ ${#files[@]} -eq 0 ]; then
-        echo "error: no .solc sources found in src/" >&2
+        echo "error: no .sol sources found in src/" >&2
         exit 1
     fi
 fi
@@ -70,7 +73,7 @@ WORK_ROOT="$(mktemp -d)"
 trap 'rm -rf "$WORK_ROOT"' EXIT
 
 for f in "${files[@]}"; do
-    base="$(basename "$f" .solc)"
+    base="$(basename "$f" .sol)"
     # Shared modules (no contract declaration) are compiled via their importers.
     if ! grep -q '^contract ' "$f"; then
         echo "== $base (module, skipped)"
@@ -84,11 +87,11 @@ for f in "${files[@]}"; do
     # in the file, so a second contract would land in output2.hull. Keep one
     # contract per file; fail loudly instead of silently dropping it.
     if [ ! -f "$work/output1.hull" ]; then
-        echo "error: $base.solc produced no contract output" >&2
+        echo "error: $base.sol produced no contract output" >&2
         exit 1
     fi
     if [ -f "$work/output2.hull" ]; then
-        echo "error: $base.solc defines more than one contract; keep one contract per file" >&2
+        echo "error: $base.sol defines more than one contract; keep one contract per file" >&2
         exit 1
     fi
     "$YULE" "$work/output1.hull" -o "$BUILD/$base.yul"

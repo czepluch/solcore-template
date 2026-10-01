@@ -6,7 +6,7 @@ import {CoreDeploy} from "./CoreDeploy.sol";
 
 /// @notice Toolchain gate: proves the full sol-core -> yule -> solc -> forge
 ///         pipeline (constructor args, storage, dispatch) and pins the exact
-///         runtime behavior of every language-feature canary in Probe.solc.
+///         runtime behavior of every language-feature canary in src/Probe.sol.
 ///         Raw .call is deliberate here: these tests assert wire shapes, so
 ///         no interface sugar sits between the assertion and the bytes.
 contract ProbeTest is Test {

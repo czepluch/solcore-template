@@ -4,10 +4,10 @@ A project template for [Core Solidity](https://github.com/argotorg/solcore),
 using Foundry for testing until the tooling matures.
 
 The `sol-core` compiler emits standard EVM bytecode. The harness compiles
-`.solc` sources to bytecode artifacts, deploys them inside forge tests,
-and drives them through hand-written Solidity interfaces. Fuzzing,
-invariant testing, exact revert assertions, and gas reports work
-unchanged.
+the Core Solidity sources in `src/` to bytecode artifacts, deploys them
+inside forge tests, and drives them through hand-written Solidity
+interfaces. Fuzzing, invariant testing, exact revert assertions, and gas
+reports work unchanged.
 
 The example's compiled artifacts are committed, so a fresh clone passes
 `forge test` without any Core Solidity toolchain. The toolchain is only
@@ -41,16 +41,16 @@ artifacts; match it for byte-identical output.
 
 ## Development
 
-Work on `.solc` sources inside the dev shell; `make test` recompiles them
-before running the suite:
+Work on the Core Solidity sources in `src/` inside the dev shell;
+`make test` recompiles them before running the suite:
 
 ```sh
 nix develop
-# edit src/*.solc, then:
+# edit src/*.sol, then:
 make test
 ```
 
-Plain `forge test` does not compile `.solc` files - it tests whatever is in
+Plain `forge test` does not compile Core Solidity - it tests whatever is in
 `build/`. Commit the regenerated `build/` artifacts together with the
 source change; the committed artifacts are what let people without a
 toolchain run the tests.
@@ -64,15 +64,16 @@ build/` no longer verifies reproducibility.
 
 | Path | What it is |
 | --- | --- |
-| `src/Counter.solc` | Example contract: forge's default Counter in Core Solidity |
-| `src/Probe.solc` | Toolchain canary: one function per language feature in use (optional) |
+| `src/Counter.sol` | Example contract: forge's default Counter in Core Solidity |
+| `src/Probe.sol` | Toolchain canary: one function per language feature in use (optional) |
 | `test/CoreDeploy.sol` | Deploys `build/<Name>.json` inside forge tests via `vm.getCode` |
 | `test/CounterAbi.sol` | Hand-written interface: the ABI source of truth |
 | `test/Counter.t.sol` | Example suite: typed calls, fuzzing, exact reverts |
 | `test/Probe.t.sol` | Pins the runtime behavior of each canary |
 | `flake.nix` | Toolchain pin: solcore (compiler + std), solc, forge as one input set |
 | `Makefile` | `make build / test / fmt / clean`; test rebuilds artifacts when a toolchain is present |
-| `scripts/check-core.sh` | Compiles `src/*.solc` to `build/`, stamps `build/TOOLCHAIN` |
+| `foundry.toml` | Harness config; `skip` and `fmt.ignore` keep forge away from `src/` |
+| `scripts/check-core.sh` | Compiles `src/*.sol` (Core Solidity) to `build/`, stamps `build/TOOLCHAIN` |
 | `scripts/sync-abi.sh` | Renders each `test/<Name>Abi.sol` to `abi/<Name>.json` |
 | `scripts/scaffold.sh` | Renames the Counter example to your contract name |
 | `build/` | Committed pipeline output: `<Name>.json` artifacts, `.yul`, `TOOLCHAIN` stamp |
@@ -80,8 +81,12 @@ build/` no longer verifies reproducibility.
 
 ## How the harness works
 
+Core Solidity uses the `.sol` extension, like classic Solidity, and its module system requires it: `import util;` resolves to `util.sol`.
+forge is therefore told to leave `src/` alone: `skip` in foundry.toml keeps `forge build` and `forge test` away from it, and `fmt.ignore` keeps `forge fmt` from parsing it.
+Only `scripts/check-core.sh` compiles `src/`.
+
 `scripts/check-core.sh` compiles each contract in three steps - `sol-core`
-(`.solc` to Core IR), `yule` (Core IR to Yul), `solc --strict-assembly`
+(Core `.sol` to Core IR), `yule` (Core IR to Yul), `solc --strict-assembly`
 (Yul to bytecode) - and writes a Foundry-shaped artifact
 `build/<Name>.json`. `test/CoreDeploy.sol` loads the artifact with
 `vm.getCode`, appends ABI-encoded constructor arguments, and deploys it
@@ -96,7 +101,7 @@ view/pure). `test/<Name>Abi.sol` declares the complete surface;
 
 ## The canary
 
-`src/Probe.solc` contains one small function per language feature the
+`src/Probe.sol` contains one small function per language feature the
 project relies on; `test/Probe.t.sol` pins each one's runtime behavior.
 Current pins: constructor arguments and dispatch, the revert payload of
 `require(cond, "msg")` (raw message bytes, not Solidity's `Error(string)`
@@ -109,7 +114,7 @@ canary function and a pinning test.
 The canary is optional. To remove it:
 
 ```sh
-git rm src/Probe.solc test/Probe.t.sol build/Probe.json build/Probe.yul
+git rm src/Probe.sol test/Probe.t.sol build/Probe.json build/Probe.yul
 ```
 
 Nothing else references it; `check-core.sh` skips the Probe-first ordering

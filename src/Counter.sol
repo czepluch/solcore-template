@@ -3,7 +3,7 @@
 // decrement() carrying the one require(cond, "message") the Probe canary
 // pins the wire shape of.
 //
-// Replace this contract with your own; keep src/Probe.solc as the toolchain
+// Replace this contract with your own; keep src/Probe.sol as the toolchain
 // canary.
 import * from std;
 import * from std.dispatch;

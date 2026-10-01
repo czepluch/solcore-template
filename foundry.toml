@@ -1,6 +1,8 @@
 # Foundry here is a TEST HARNESS only: the contracts themselves are Core
-# Solidity (src/*.solc, compiled to build/*.json by scripts/check-core.sh).
-# Forge ignores the .solc files in src/ (it only compiles *.sol); the tests
+# Solidity (src/*.sol, compiled to build/*.json by scripts/check-core.sh).
+# Core Solidity shares the .sol extension but is not solc-compatible, so
+# src/ is excluded from forge twice: `skip` keeps forge build/test away
+# from it, and `fmt.ignore` keeps forge fmt from parsing it. The tests
 # under test/ read the compiled hex, deploy it, and drive it through
 # hand-authored Solidity interfaces.
 [profile.default]
@@ -8,4 +10,8 @@ src = "src"
 out = "out"
 libs = ["lib"]
 solc = "0.8.33"
+skip = ["src/**"]
 fs_permissions = [{ access = "read", path = "./build" }]
+
+[fmt]
+ignore = ["src/*.sol", "src/**/*.sol"]

@@ -1,6 +1,6 @@
-# Build orchestration. forge has no native hook for compiling .solc, so the
-# Core Solidity artifacts are built first (scripts/check-core.sh into
-# build/) and then consumed by forge via vm.getCode. Inside the dev shell
+# Build orchestration. forge cannot compile Core Solidity (foundry.toml
+# skips src/), so the Core artifacts are built first (scripts/check-core.sh
+# into build/) and then consumed by forge via vm.getCode. Inside the dev shell
 # (nix develop) the toolchain is on PATH; outside it, `make test` still
 # works by testing the committed artifacts.
 
@@ -8,7 +8,7 @@
 
 all: build
 
-## build: compile src/*.solc to build/ artifacts, then forge build
+## build: compile src/*.sol (Core Solidity) to build/ artifacts, then forge build
 build:
 	./scripts/check-core.sh
 	forge build
