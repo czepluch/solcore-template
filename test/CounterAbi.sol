@@ -2,10 +2,10 @@
 pragma solidity ^0.8.33;
 
 /// @notice Complete external interface of the Core Solidity `Counter`
-///         contract. The sol-core compiler's --abi covers functions,
-///         constructor, and fallback only - it cannot emit events, errors,
-///         or view/pure mutability - so a hand-authored interface like this
-///         is the ABI source of truth. Run scripts/sync-abi.sh (forge
+///         contract. The solcore compiler's --abi covers functions,
+///         constructor, and fallback only (no events, errors, or view/pure
+///         mutability), so a hand-authored interface like this is the ABI
+///         source of truth. Run scripts/sync-abi.sh (forge
 ///         inspect) to get it as JSON. Every signature here is verified
 ///         against the compiled bytecode by test/Counter.t.sol.
 interface CounterAbi {

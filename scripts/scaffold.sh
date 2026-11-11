@@ -2,11 +2,11 @@
 # Rename the Counter example to your own contract name, in place: source,
 # tests, interface, ABI, and the committed build artifacts.
 #
-# The compiled hex is name-independent (yul object names are resolved away
-# during compilation, and Counter's require message embeds no contract
-# name), so the renamed build/ artifacts remain byte-identical to what a
-# rebuild of the renamed source produces: forge test stays green before any
-# toolchain setup, and the reproducibility check keeps meaning something.
+# The compiled hex is name-independent (Yul object names do not reach the
+# bytecode, and Counter's require message embeds no contract name), so the
+# renamed build/ artifacts remain byte-identical to what a rebuild of the
+# renamed source produces: forge test stays green before any toolchain
+# setup, and the reproducibility check keeps meaning something.
 # src/Probe.sol is the toolchain canary and is not touched.
 #
 # Usage: scripts/scaffold.sh [<Name>]
@@ -64,11 +64,13 @@ echo "== renaming Counter to $NAME"
 rename "$ROOT/src/Counter.sol"      "$ROOT/src/$NAME.sol"       -e "s/Counter/$NAME/g"
 rename "$ROOT/test/CounterAbi.sol"   "$ROOT/test/${NAME}Abi.sol"  -e "s/Counter/$NAME/g"
 rename "$ROOT/test/Counter.t.sol"    "$ROOT/test/$NAME.t.sol"     -e "s/Counter/$NAME/g" -e "s/counter/$lower/g"
-rename "$ROOT/build/Counter.yul"     "$ROOT/build/$NAME.yul"      -e "s/Counter/$NAME/g"
 rename "$ROOT/build/Counter.json"    "$ROOT/build/$NAME.json"
+# build/<Name>.yul is gitignored and its function names depend on the
+# contract name; the next check-core.sh run writes it for the new name.
+rm -f "$ROOT/build/Counter.yul"
 rename "$ROOT/abi/Counter.json"      "$ROOT/abi/$NAME.json"
 
 echo "== done. Next:"
 echo "   forge test                                # still green, no toolchain needed"
-echo "   scripts/check-core.sh && forge test       # once a toolchain is pinned"
+echo "   make toolchain && make test               # rebuild with the pinned toolchain"
 echo "   (README.md still describes the Counter example; update it as you go)"

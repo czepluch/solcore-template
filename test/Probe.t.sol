@@ -4,7 +4,7 @@ pragma solidity ^0.8.33;
 import {Test} from "forge-std/Test.sol";
 import {CoreDeploy} from "./CoreDeploy.sol";
 
-/// @notice Toolchain gate: proves the full sol-core -> yule -> solc -> forge
+/// @notice Toolchain gate: proves the full solcore -> solc -> forge
 ///         pipeline (constructor args, storage, dispatch) and pins the exact
 ///         runtime behavior of every language-feature canary in src/Probe.sol.
 ///         Raw .call is deliberate here: these tests assert wire shapes, so

@@ -1,0 +1,15 @@
+# Core Solidity toolchain for this project. scripts/toolchain.sh pin
+# writes this file and scripts/toolchain.sh install reads it.
+solcore 0.1.0-alpha
+solc 0.8.38
+evm-version osaka
+
+# asset <tool> <host> <release asset> <sha256>
+asset solcore linux-x86_64 solcore-v0.1.0-alpha-x86_64-unknown-linux-gnu.tar.gz d65a9eae895bb35e8369c6c9540ab3181999714c261571decc1f59242d977716
+asset solcore linux-aarch64 solcore-v0.1.0-alpha-aarch64-unknown-linux-gnu.tar.gz 392b733f8ef41c55ab6afef333c98acbe1c1171f71a6136ab546942c91be800e
+asset solcore darwin-x86_64 solcore-v0.1.0-alpha-x86_64-apple-darwin.tar.gz 354eff81941defcc596c3bc637b0972388e55e8119a7d5524d9615c4b2a8ccb6
+asset solcore darwin-arm64 solcore-v0.1.0-alpha-aarch64-apple-darwin.tar.gz 80465b872b2badda05a99650a3a638d29ae048ecc70fed9cc95915b72fc8748b
+asset solc linux-x86_64 solc-static-linux 65c3180a336eabb6bdc4bbd49cc405aeb233976964ae6c11fba2a6c8be8f3243
+asset solc linux-aarch64 solc-static-linux-arm 7a986c8f85945fec780d2cbb352cdd85959b7222dd33830a7563c2af4bc1fca0
+asset solc darwin-x86_64 solc-macos b18ac1d1f48394c71ca9aefbf0fb94fef24c87b358f48578de5941e234e0a2a9
+asset solc darwin-arm64 solc-macos b18ac1d1f48394c71ca9aefbf0fb94fef24c87b358f48578de5941e234e0a2a9
