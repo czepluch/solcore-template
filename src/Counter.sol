@@ -5,6 +5,8 @@
 //
 // Replace this contract with your own; keep src/Probe.sol as the toolchain
 // canary.
+pragma solcore;
+
 import * from std;
 import * from std.dispatch;
 

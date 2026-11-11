@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 # Regenerate abi/<Name>.json from each hand-authored test/<Name>Abi.sol
-# interface - the single source of the complete ABI (functions, events, and
-# errors; the sol-core compiler emits functions only, so the interface
-# carries the rest and `forge inspect` turns it into JSON).
+# interface, the single source of the complete ABI (functions, events, and
+# errors). The solcore compiler's ABI output has no events, errors, or
+# view/pure mutability, so the interface carries the rest and `forge inspect`
+# turns it into JSON.
 #
 # Usage: scripts/sync-abi.sh          # regenerate abi/*.json
 #        scripts/sync-abi.sh --check  # diff committed files against fresh

@@ -2,12 +2,12 @@
 cache/
 out/
 
-# build/ is fully committed (the example's compiled artifacts plus the
-# TOOLCHAIN stamp); check-core.sh keeps its intermediates in a temp dir.
+# Core Solidity toolchain installed by scripts/toolchain.sh
+.toolchain/
 
-# Nix build out-links
-result
-result-*
+# build/ holds the committed artifacts (<Name>.json plus the TOOLCHAIN
+# stamp). The <Name>.yul next to them is written for inspection only.
+build/*.yul
 
 # Dotenv
 .env

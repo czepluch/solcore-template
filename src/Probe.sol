@@ -1,8 +1,8 @@
 // Toolchain probe: one tiny function per language feature this project
 // relies on, each pinned by a forge test asserting exact runtime behavior.
 // check-core.sh compiles this file FIRST, so when the pinned toolchain moves
-// (rev bump, std change), drift fails here - small and labeled - before your
-// real contracts do.
+// (a new solcore or solc release), drift fails here, small and labeled,
+// before your real contracts do.
 //
 // Canaries (each maps to a Counter.sol pattern):
 //   constructor + get  constructor args ABI-appended to initcode, storage,
@@ -20,6 +20,8 @@
 // function per feature, one test per function. The canary is optional: once
 // your toolchain is stable, remove it together with test/Probe.t.sol and
 // build/Probe.* (see "The canary" in README.md).
+pragma solcore;
+
 import * from std;
 import * from std.dispatch;
 
@@ -50,7 +52,9 @@ contract Probe {
 
     // Bare literals in non-tail returns, unified against the expected type.
     function bareLit(x: uint256) public returns (uint256) {
-        if (x > 0) { return 0; }
+        if (x > 0) {
+            return 0;
+        }
         return 1;
     }
 }
