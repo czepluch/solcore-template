@@ -13,6 +13,6 @@ interface CounterAbi {
     function setNumber(uint256 newNumber) external;
     function increment() external;
     /// @dev Reverts with the raw bytes "underflow" at zero (Core Solidity's
-    ///      native require message shape - not Error(string)).
+    ///      require message shape, not Error(string)).
     function decrement() external;
 }

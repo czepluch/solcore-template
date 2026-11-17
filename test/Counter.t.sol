@@ -8,7 +8,7 @@ import {CounterAbi} from "./CounterAbi.sol";
 /// @notice The example suite: deploys the compiled Core Solidity bytecode
 ///         (build/Counter.json) and drives it through the hand-authored
 ///         typed interface, so tests read exactly like ordinary forge
-///         tests - fuzzing and exact revert assertions included.
+///         tests, fuzzing and exact revert assertions included.
 contract CounterTest is Test {
     CounterAbi counter;
 
