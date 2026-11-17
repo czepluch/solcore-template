@@ -3,10 +3,10 @@
 # tests, interface, ABI, and the committed build artifacts.
 #
 # The compiled hex is name-independent (Yul object names do not reach the
-# bytecode, and Counter's require message embeds no contract name), so the
-# renamed build/ artifacts remain byte-identical to what a rebuild of the
-# renamed source produces: forge test stays green before any toolchain
-# setup, and the reproducibility check keeps meaning something.
+# bytecode, and the require message in src/math.sol embeds no contract
+# name), so the renamed build/ artifacts remain byte-identical to what a
+# rebuild of the renamed source produces: forge test stays green before any
+# toolchain setup, and the CI reproduce check keeps passing.
 #
 # Usage: scripts/scaffold.sh [<Name>]
 #        (UpperCamelCase; prompted for interactively if omitted)

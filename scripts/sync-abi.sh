@@ -24,7 +24,7 @@ for iface in "$ROOT"/test/*Abi.sol; do
         if diff -u "$out" <(printf '%s\n' "$fresh"); then
             echo "abi/$name.json matches test/${name}Abi.sol"
         else
-            echo "error: $out has drifted from test/${name}Abi.sol - run scripts/sync-abi.sh" >&2
+            echo "error: $out has drifted from test/${name}Abi.sol; run scripts/sync-abi.sh" >&2
             status=1
         fi
     else
