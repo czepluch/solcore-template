@@ -37,8 +37,11 @@ if [ ! -f "$ROOT/src/Counter.sol" ]; then
     echo "error: src/Counter.sol not found (already scaffolded?)" >&2
     exit 1
 fi
-if [ -e "$ROOT/src/$NAME.sol" ]; then
-    echo "error: src/$NAME.sol already exists" >&2
+# Case-insensitive, so src/Math.sol cannot overwrite the src/math.sol module
+# on a case-insensitive filesystem.
+existing="$(find "$ROOT/src" -maxdepth 1 -iname "$NAME.sol" | head -1)"
+if [ -n "$existing" ]; then
+    echo "error: ${existing#"$ROOT/"} already exists; pick another name" >&2
     exit 1
 fi
 
