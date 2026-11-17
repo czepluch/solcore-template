@@ -11,6 +11,9 @@
 # entirely, so this script is the only thing that compiles it. Every
 # contract declared in a top-level src/*.sol file gets an artifact. Files
 # that declare no contract are modules, compiled through their importers.
+# The module root is the repository root, the same root an editor uses when
+# the repository is its workspace, so `lib.` imports resolve the same way in
+# both.
 #
 # The toolchain is the one pinned in toolchain.lock and installed into
 # .toolchain/ by scripts/toolchain.sh; SOLCORE and SOLC override it. Each
@@ -89,7 +92,7 @@ for f in "${files[@]}"; do
         # solcore emits one top-level Yul object per contract, named
         # <Name>Deploy. --abi writes <Name>.abi for every contract reachable
         # from the file, including contracts in imported modules.
-        "$SOLCORE" "$f" --root "$SRC" --abi -o "$WORK" \
+        "$SOLCORE" "$f" --root "$ROOT" --abi -o "$WORK" \
             --emit-yul="$BUILD/$name.yul" --emit-yul-object "${name}Deploy"
         creation="0x$("$SOLC" --strict-assembly --bin --optimize \
             --evm-version "$EVM_VERSION" "$BUILD/$name.yul" | tail -1 | tr -d '\n')"

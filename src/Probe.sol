@@ -4,7 +4,7 @@
 // (a new solcore or solc release), drift fails here, small and labeled,
 // before your real contracts do.
 //
-// Canaries (each maps to a Counter.sol pattern):
+// Canaries (each maps to a pattern in src/Counter.sol or src/math.sol):
 //   constructor + get  constructor args ABI-appended to initcode, storage,
 //                      and selector dispatch, end-to-end
 //   stored/extra       storage fields lay out sequentially from slot 0, in

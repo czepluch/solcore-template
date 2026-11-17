@@ -55,6 +55,7 @@ The [playground](https://playground.solcore.soliditylang.org/) and the [tutorial
 | Path | What it is |
 | --- | --- |
 | `src/Counter.sol` | Example contract: forge's default Counter in Core Solidity |
+| `src/math.sol` | Example module: a helper Counter imports |
 | `src/Probe.sol` | Toolchain canary: one function per language feature in use (optional) |
 | `test/CoreDeploy.sol` | Deploys `build/<Name>.json` inside forge tests via `vm.getCode` |
 | `test/CounterAbi.sol` | Hand-written interface: the ABI source of truth |
@@ -86,6 +87,25 @@ Tests call the deployed address through a hand-written interface and read like o
 The interface is the ABI source of truth, not the compiler.
 The artifact bundles the compiler's `--abi` output so `cast interface build/<Name>.json` works, but that output is partial: functions, constructor, and fallback only, each marked payable or nonpayable, with no events, errors, or view/pure.
 `test/<Name>Abi.sol` declares the complete surface; `scripts/sync-abi.sh` renders it to `abi/<Name>.json`.
+
+## Modules
+
+Contracts live in top-level files in `src/`, each named after its contract in UpperCamelCase (`Counter.sol`).
+Shared code lives in lowercase modules that declare no contract, such as `src/math.sol`, which may also sit in subfolders.
+A module lists the names other files may use with `export { ... }`, and an importer names what it uses: `import { decremented } from math;`.
+
+| Import | Resolves to |
+| --- | --- |
+| `from math` | `math.sol` in the importing file's folder |
+| `from util.math` | `util/math.sol` below the importing file's folder |
+| `from lib.src.math` | `src/math.sol` from the repository root |
+| `from std.dispatch` | the standard library shipped with `solcore` |
+
+`check-core.sh` compiles with the repository root as the module root.
+An editor uses the same root when the repository is opened as its workspace, so `lib.` imports resolve the same way in both.
+
+The solcore-rs language server only indexes `.sol` files that start with `pragma solcore;`, and the VS Code extension hands every other `.sol` file to a Solidity extension.
+The Core Solidity sources in `src/` and the Solidity tests in `test/` can therefore share one workspace.
 
 ## The canary
 

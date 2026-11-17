@@ -1,7 +1,6 @@
 // The example contract: a Core Solidity port of forge's default Counter.
 // Same external surface (number(), setNumber(uint256), increment()) plus a
-// decrement() carrying the one require(cond, "message") the Probe canary
-// pins the wire shape of.
+// decrement() that uses the decremented helper from the src/math.sol module.
 //
 // Replace this contract with your own; keep src/Probe.sol as the toolchain
 // canary.
@@ -9,6 +8,7 @@ pragma solcore;
 
 import * from std;
 import * from std.dispatch;
+import { decremented } from math;
 
 contract Counter {
     number: uint256;
@@ -27,14 +27,8 @@ contract Counter {
         number = number + 1;
     }
 
-    // require with a source-literal message: on failure the revert payload
-    // is the RAW message bytes, not Solidity's Error(string) encoding.
-    // test/Probe.t.sol pins that wire shape; test/Counter.t.sol relies on it.
-    // The message deliberately does not embed the contract name: the compiled
-    // hex is name-independent, so scripts/scaffold.sh can rename this
-    // contract without invalidating the committed build artifacts.
+    // Reverts with the raw bytes "underflow" at zero (see src/math.sol).
     function decrement() public {
-        require(number > 0, "underflow");
-        number = number - 1;
+        number = decremented(number);
     }
 }
