@@ -2,8 +2,7 @@
 // Same external surface (number(), setNumber(uint256), increment()) plus a
 // decrement() that uses the decremented helper from the src/math.sol module.
 //
-// Replace this contract with your own; keep src/Probe.sol as the toolchain
-// canary.
+// Replace this contract with your own.
 pragma solcore;
 
 import * from std;

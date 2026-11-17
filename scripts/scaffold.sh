@@ -7,7 +7,6 @@
 # renamed build/ artifacts remain byte-identical to what a rebuild of the
 # renamed source produces: forge test stays green before any toolchain
 # setup, and the reproducibility check keeps meaning something.
-# src/Probe.sol is the toolchain canary and is not touched.
 #
 # Usage: scripts/scaffold.sh [<Name>]
 #        (UpperCamelCase; prompted for interactively if omitted)
@@ -28,10 +27,6 @@ fi
 if [ "$NAME" = "Counter" ]; then
     echo "nothing to do: the example is already named Counter"
     exit 0
-fi
-if [ "$NAME" = "Probe" ]; then
-    echo "error: Probe is the toolchain canary; pick another name" >&2
-    exit 1
 fi
 if [ ! -f "$ROOT/src/Counter.sol" ]; then
     echo "error: src/Counter.sol not found (already scaffolded?)" >&2

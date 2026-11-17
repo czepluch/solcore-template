@@ -56,11 +56,9 @@ The [playground](https://playground.solcore.soliditylang.org/) and the [tutorial
 | --- | --- |
 | `src/Counter.sol` | Example contract: forge's default Counter in Core Solidity |
 | `src/math.sol` | Example module: a helper Counter imports |
-| `src/Probe.sol` | Toolchain canary: one function per language feature in use (optional) |
 | `test/CoreDeploy.sol` | Deploys `build/<Name>.json` inside forge tests via `vm.getCode` |
 | `test/CounterAbi.sol` | Hand-written interface: the ABI source of truth |
 | `test/Counter.t.sol` | Example suite: typed calls, fuzzing, exact reverts |
-| `test/Probe.t.sol` | Pins the runtime behavior of each canary |
 | `toolchain.lock` | Pinned solcore and solc releases, the sha256 of each platform's download, and the EVM version |
 | `Makefile` | `make toolchain / build / test / fmt / clean`; test rebuilds artifacts when the toolchain is installed |
 | `foundry.toml` | Harness config; `skip` and `fmt.ignore` keep forge away from `src/`, `evm_version` matches the lock |
@@ -107,21 +105,6 @@ An editor uses the same root when the repository is opened as its workspace, so 
 The solcore-rs language server only indexes `.sol` files that start with `pragma solcore;`, and the VS Code extension hands every other `.sol` file to a Solidity extension.
 The Core Solidity sources in `src/` and the Solidity tests in `test/` can therefore share one workspace.
 
-## The canary
-
-`src/Probe.sol` contains one small function per language feature the project relies on; `test/Probe.t.sol` pins each one's runtime behavior.
-Current pins: constructor arguments and dispatch, the revert payload of `require(cond, "msg")` (raw message bytes, not Solidity's `Error(string)` encoding), bare integer literals, and storage layout (sequential slots from 0, read with `vm.load`).
-`check-core.sh` compiles Probe first, so after a toolchain bump, drift fails in a small labeled test rather than somewhere in your contract.
-When you adopt a new language feature, add a canary function and a pinning test.
-
-The canary is optional. To remove it:
-
-```sh
-git rm src/Probe.sol test/Probe.t.sol build/Probe.json
-```
-
-Nothing else references it; `check-core.sh` skips the Probe-first ordering when the file is absent.
-
 ## The toolchain pin
 
 `toolchain.lock` pins the [solcore](https://github.com/argotorg/solcore-rs/releases) release, the [solc](https://github.com/argotorg/solidity/releases) release that assembles the Yul, and the EVM version both target.
@@ -142,7 +125,7 @@ To bump the toolchain:
 scripts/toolchain.sh pin --solcore latest    # or an exact version
 scripts/toolchain.sh install
 make build && forge test
-git diff build/    # artifact changes, if any; failing Probe tests name what moved
+git diff build/    # artifact changes, if any
 ```
 
 `pin` takes `--solcore` and `--solc`, each with an exact version or `latest`, and `--evm-version` with a name such as `osaka`.

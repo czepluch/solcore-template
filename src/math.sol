@@ -8,10 +8,9 @@ import * from std;
 export { decremented };
 
 // Returns n - 1. At zero it reverts with the raw message bytes "underflow"
-// (not Solidity's Error(string) encoding); test/Probe.t.sol pins that wire
-// shape and test/Counter.t.sol relies on it. The message embeds no contract
-// name, so scripts/scaffold.sh can rename the contract without invalidating
-// the committed build artifacts.
+// (not Solidity's Error(string) encoding); test/Counter.t.sol pins that wire
+// shape. The message embeds no contract name, so scripts/scaffold.sh can
+// rename the contract without invalidating the committed build artifacts.
 function decremented(n: uint256) returns (uint256) {
     require(n > 0, "underflow");
     return n - 1;
