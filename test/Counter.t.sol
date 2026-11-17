@@ -38,9 +38,8 @@ contract CounterTest is Test {
         assertEq(counter.number(), 1);
     }
 
-    /// The require message arrives as raw bytes (the wire shape pinned by
-    /// test/Probe.t.sol), so expectRevert matches the bare string - no
-    /// Error(string) wrapping.
+    /// The require message arrives as raw bytes, so expectRevert matches the
+    /// bare string, with no Error(string) wrapping.
     function test_decrementRevertsAtZero() public {
         vm.expectRevert(bytes("underflow"));
         counter.decrement();
